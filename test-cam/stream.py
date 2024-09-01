@@ -1,10 +1,12 @@
-from flask import Flask, render_template, Response
-import os
-from picamera2 import Picamera2
 import io
+import os
+
 from PIL import Image
+from flask import Flask, render_template, Response
+from picamera2 import Picamera2
 
 app = Flask(__name__)
+
 camera = Picamera2()
 camera_config = camera.create_video_configuration(main={"size": (640, 480)})
 camera.configure(camera_config)

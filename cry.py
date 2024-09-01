@@ -1,58 +1,23 @@
-import os
+
+import datetime
+import wave
+
+import joblib
+import librosa
 import numpy as np
+import pyaudio
 import tensorflow as tf
 import tensorflow_hub as hub
-import librosa
-import joblib
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import db
-import datetime
-import pyaudio
-import wave
-import time
 
-# Initialize Firebase
-if not firebase_admin._apps:
-    cred = credentials.Certificate("kidzcare-97f3c-firebase-adminsdk-fpml6-3904295b4d.json")
-    firebase_admin.initialize_app(cred, {
-        'databaseURL': 'https://kidzcare-97f3c-default-rtdb.firebaseio.com'
-    })
-ref = db.reference('/kiddycare')
-users_ref = ref.child('cry_predictions')
+from configs.config import *
+from configs.cry import *
+
+users_ref = firebase_ref.child('cry_predictions')
 
 # Load models
-ml_dir = "/audio-ml/"
-cry_classifier = tf.keras.models.load_model(ml_dir + 'infant_cry_classifier.h5')
-yamnet_model = hub.load('https://tfhub.dev/google/yamnet/1')
-xgb_clf = joblib.load(ml_dir + 'xgboost_model.pkl')
-
-# Audio parameters
-CHUNK = 1024
-FORMAT = pyaudio.paInt16
-CHANNELS = 1
-RATE = 16000
-RECORD_SECONDS = 5
-WAVE_OUTPUT_DIRECTORY = "outs"
-SILENCE_THRESHOLD = 10000  # Adjust this value based on your microphone and environment
-
-# Ensure output directory exists
-os.makedirs(WAVE_OUTPUT_DIRECTORY, exist_ok=True)
-
-# Feature extraction parameters
-n_mfcc = 40
-n_fft = 1024
-hop_length = 10 * 16
-win_length = 25 * 16
-window = 'hann'
-n_chroma = 12
-n_mels = 128
-n_bands = 7
-fmin = 100
-bins_per_octave = 12
-
-# Cry reason labels
-label_names = {0: 'belly_pain', 1: 'burping', 2: 'discomfort', 3: 'hungry', 4: 'tired'}
+cry_classifier = tf.keras.models.load_model(CRY_MODEL_DIR + CRY_CLASSIFIER_MODEL_PATH)
+yamnet_model = hub.load(YAMNET_MODEL_PATH)
+xgb_clf = joblib.load(CRY_MODEL_DIR + XGBOOST_MODEL_PATH)
 
 
 def preprocess_audio(audio, target_sr=16000, duration=5):
@@ -131,7 +96,6 @@ def continuous_audio_monitor():
                     rate=RATE,
                     input=True,
                     frames_per_buffer=CHUNK)
-
     print("* Monitoring audio...")
 
     try:
