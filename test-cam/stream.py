@@ -1,7 +1,7 @@
 from flask import Flask, render_template, Response
 import os
 from picamera2 import Picamera2
-import time
+import io
 from PIL import Image
 
 app = Flask(__name__)
@@ -9,6 +9,7 @@ camera = Picamera2()
 camera_config = camera.create_video_configuration(main={"size": (640, 480)})
 camera.configure(camera_config)
 camera.start()
+
 
 # Function to get system information
 def get_system_info():
@@ -18,14 +19,13 @@ def get_system_info():
     disk_usage = os.popen("df -h | awk '$NF==\"/\"{printf \"%d/%dGB (%s)\", $3,$2,$5}'").readline().strip()
     return {"cpu_temp": cpu_temp, "cpu_usage": cpu_usage, "mem_usage": mem_usage, "disk_usage": disk_usage}
 
+
 # Route for the home page
 @app.route('/')
 def index():
     sys_info = get_system_info()
     return render_template('index.html', sys_info=sys_info)
 
-import io
-from PIL import Image
 
 def generate_stream():
     stream = io.BytesIO()
@@ -45,19 +45,12 @@ def generate_stream():
         stream.truncate()
 
 
-# # Function to generate video stream
-# def generate_stream():
-#     while True:
-#         buffer = camera.capture_buffer("main")
-#         yield (b'--frame\r\n'
-#                b'Content-Type: image/jpeg\r\n\r\n' + buffer + b'\r\n')
-#         time.sleep(0.1)
-
 # Route for the video feed
 @app.route('/video_feed')
 def video_feed():
     return Response(generate_stream(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

@@ -91,6 +91,6 @@ while True:
         cv2.imwrite(f"captured_images/frame_{timestamp}.jpg", frame)
         print("No fall detected in this frame.")
 
-# Clean up
-cv2.destroyAllWindows()
-picam2.stop()
+    # Clean up
+    cv2.destroyAllWindows()
+    picam2.stop()
