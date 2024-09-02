@@ -2,9 +2,11 @@ import os
 
 import pyaudio
 
+from configs.config import OUTPUT_DIRECTORY
+
 # ===================================================================================================
 # CRY - Yamnet Model Path
-CRY_MODEL_DIR = '/audio-ml'
+CRY_MODEL_DIR = 'audio-ml/'
 YAMNET_MODEL_PATH = 'https://tfhub.dev/google/yamnet/1'
 CRY_CLASSIFIER_MODEL_PATH = 'infant_cry_classifier.h5'
 XGBOOST_MODEL_PATH = 'xgboost_model.pkl'
@@ -12,11 +14,12 @@ XGBOOST_MODEL_PATH = 'xgboost_model.pkl'
 
 
 # ===================================================================================================
-WAVE_OUTPUT_DIRECTORY = "outs"
+WAVE_OUTPUT_DIRECTORY = OUTPUT_DIRECTORY + "/cry"
 # Ensure output directory exists
 os.makedirs(WAVE_OUTPUT_DIRECTORY, exist_ok=True)
 
 # Audio parameters
+DEVICE_INDEX = 3
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 1

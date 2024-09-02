@@ -9,15 +9,27 @@ ssh admin@raspberrypi.local
 ```
 password: `admin`
 
-
+---
 ## Run Fall Detection
 
  ```bash
  python fall.py
  ```
 
- ## Run Cry Detection
+--- 
+
+## Run Cry Detection
 
  ```bash
- python cry.py
+ python cry.py 2>/dev/null
  ```
+
+### Test Mic
+
+```bash
+arecord -D hw:3,0 -f cd -c 1 -vv ~/test.wav
+```
+
+- hw:3 This is the card no(Hardware PCM card 3).
+- -c 1: This sets the number of channels to 1 (mono).
+- -f cd: This keeps the format as CD quality (16-bit, 44100 Hz).

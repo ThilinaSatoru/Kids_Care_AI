@@ -14,10 +14,12 @@ VIDEO_WIDTH = 480
 
 # ===================================================================================================
 # FALL - YOLO Model Path
-YOLO_MODEL_PATH = '/fall-ml/falldetectionmodelv3.pt'
+YOLO_MODEL_PATH = 'fall-ml/falldetectionmodelv3.pt'
 
+OUTPUT_DIRECTORY = 'OUTS'
+os.makedirs(OUTPUT_DIRECTORY, exist_ok=True)
 # Create directories for saving images
-IMG_OUTPUT_DIRECTORY = 'detected'
+IMG_OUTPUT_DIRECTORY = OUTPUT_DIRECTORY + '/falls'
 os.makedirs(IMG_OUTPUT_DIRECTORY, exist_ok=True)
 
 # Firebase Configuration

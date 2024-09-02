@@ -91,10 +91,15 @@ def is_silent(audio_data):
 def continuous_audio_monitor():
     p = pyaudio.PyAudio()
 
+    # Get the device info and confirm it
+    device_info = p.get_device_info_by_index(DEVICE_INDEX)
+    print(f"Using device: {device_info['name']}")
+
     stream = p.open(format=FORMAT,
                     channels=CHANNELS,
                     rate=RATE,
                     input=True,
+                    input_device_index=DEVICE_INDEX,
                     frames_per_buffer=CHUNK)
     print("* Monitoring audio...")
 
@@ -118,7 +123,7 @@ def continuous_audio_monitor():
                 audio_data = audio_data.astype(np.float32) / 32768.0  # Normalize to [-1.0, 1.0]
 
                 # Save the audio file
-                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 wave_output_filename = os.path.join(WAVE_OUTPUT_DIRECTORY, f"output_{timestamp}.wav")
                 wf = wave.open(wave_output_filename, 'wb')
                 wf.setnchannels(CHANNELS)
