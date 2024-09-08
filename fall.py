@@ -5,7 +5,12 @@ from ultralytics import YOLO
 from configs.config import *
 
 # Define a boolean flag for video mode
-USE_VIDEO_FILE = True  # Set to True to use video file, False to use PiCamera
+print('If Sample Video - 1, Camera - 2: ')
+x = input()
+if int(x) == 1:
+    USE_VIDEO_FILE = True  # Set to True to use video file, False to use PiCamera
+else:
+    USE_VIDEO_FILE = False
 
 # Initialize YOLO model
 MODEL = YOLO(YOLO_MODEL_PATH)

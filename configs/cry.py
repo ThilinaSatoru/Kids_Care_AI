@@ -9,7 +9,8 @@ from configs.config import OUTPUT_DIRECTORY
 CRY_MODEL_DIR = 'audio-ml/'
 YAMNET_MODEL_PATH = 'https://tfhub.dev/google/yamnet/1'
 CRY_CLASSIFIER_MODEL_PATH = 'infant_cry_classifier.h5'
-XGBOOST_MODEL_PATH = 'xgboost_model.pkl'
+# XGBOOST_MODEL_PATH = 'xgboost_model.pkl'
+XGBOOST_MODEL_PATH = 'model.joblib'
 # ===================================================================================================
 
 
@@ -24,7 +25,7 @@ CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 16000
-RECORD_SECONDS = 5
+RECORD_SECONDS = 10
 SILENCE_THRESHOLD = 10000  # Adjust this value based on your microphone and environment
 
 # Feature extraction parameters
