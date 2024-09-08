@@ -1,16 +1,11 @@
-import os
-
 import cv2
 from picamera2 import Picamera2
 from ultralytics import YOLO
 
 from configs.config import *
 
-# Initialize PiCamera2
-picam2 = Picamera2()
-config = picam2.create_video_configuration(main={"size": (VIDEO_HEIGHT, VIDEO_WIDTH), "format": "RGB888"})
-picam2.configure(config)
-picam2.start()
+# Define a boolean flag for video mode
+USE_VIDEO_FILE = True  # Set to True to use video file, False to use PiCamera
 
 # Initialize YOLO model
 MODEL = YOLO(YOLO_MODEL_PATH)
@@ -18,10 +13,32 @@ MODEL = YOLO(YOLO_MODEL_PATH)
 # Firebase Configuration
 users_ref = firebase_ref.child('fall_detection')
 
+# Initialize PiCamera2 or Video Capture
+if USE_VIDEO_FILE:
+    # Open video file
+    print("Using video file")
+    video_capture = cv2.VideoCapture('samples/v1.mp4')
+    if not video_capture.isOpened():
+        raise IOError("Cannot open video file")
+else:
+    # Initialize PiCamera2
+    print("Waiting for video")
+    picam2 = Picamera2()
+    config = picam2.create_video_configuration(main={"size": (VIDEO_HEIGHT, VIDEO_WIDTH), "format": "RGB888"})
+    picam2.configure(config)
+    picam2.start()
+
 try:
     while True:
-        # Capture frame
-        frame = picam2.capture_array()
+        if USE_VIDEO_FILE:
+            # Capture frame from video file
+            ret, frame = video_capture.read()
+            if not ret:
+                print("End of video file or failed to read frame")
+                break
+        else:
+            # Capture frame from PiCamera2
+            frame = picam2.capture_array()
 
         # Run YOLO detection
         results = MODEL.track(frame, persist=True, conf=0.5)
@@ -47,7 +64,7 @@ try:
                 cv2.putText(frame, f'{class_name} {confidence:.2f}', (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9,
                             color, 2)
 
-        timestamp = date_now.strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         if detected_fall:
             # Save the annotated frame if a fall is detected
             filename = os.path.join(IMG_OUTPUT_DIRECTORY, f"fall_{timestamp}.jpg")
@@ -59,10 +76,12 @@ try:
             blob.upload_from_filename(filename)
             download_url = blob.public_url  # Get the image's download URL
 
+            print(download_url)
+
             # Push data to Firebase Realtime Database
             new_entry_ref = users_ref.push({
-                'date': date_now.date().isoformat(),
-                'time': date_now.time().isoformat(),
+                'date': datetime.now().date().isoformat(),
+                'time': datetime.now().time().isoformat(),
                 'image': download_url  # Save the download URL to the database
             })
 
@@ -74,5 +93,8 @@ except KeyboardInterrupt:
     print("Closing Camera Detection.")
 finally:
     # Clean up
+    if USE_VIDEO_FILE:
+        video_capture.release()
+    else:
+        picam2.stop()
     cv2.destroyAllWindows()
-    picam2.stop()

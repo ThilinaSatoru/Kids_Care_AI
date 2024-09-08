@@ -23,7 +23,7 @@ IMG_OUTPUT_DIRECTORY = OUTPUT_DIRECTORY + '/falls'
 os.makedirs(IMG_OUTPUT_DIRECTORY, exist_ok=True)
 
 # Firebase Configuration
-GOOGLE_APPLICATION_CREDENTIALS = 'kidzcare-97f3c-firebase-adminsdk-fpml6-3904295b4d.json'
+GOOGLE_APPLICATION_CREDENTIALS = 'kidzcare-97f3c-9fd483c9d2c4.json'
 FIREBASE_STORAGE_BUCKET = 'kidzcare-97f3c.appspot.com'
 FIREBASE_DATABASE_NAME = '/kiddycare'
 FIREBASE_DATABASE_URL = 'https://kidzcare-97f3c-default-rtdb.firebaseio.com'

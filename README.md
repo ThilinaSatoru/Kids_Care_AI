@@ -6,6 +6,7 @@ Kids Care AI IOT Device - RaspberryPi USB Mic voice detection and Picamera fall 
 
 ```cmd
 ssh admin@raspberrypi.local
+cd Documents/Kids_Care_AI
 ```
 password: `admin`
 
@@ -13,7 +14,7 @@ password: `admin`
 ## Run Fall Detection
 
  ```bash
- python fall.py
+ python fall.py 2>/dev/null
  ```
 
 --- 

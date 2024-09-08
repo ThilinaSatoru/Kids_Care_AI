@@ -1,5 +1,3 @@
-
-import datetime
 import wave
 
 import joblib
@@ -75,8 +73,8 @@ def predict_cry_reason(audio_data, sr):
 
 
 def send_prediction_to_firebase(is_cry, cry_reason=None):
-    new_prediction = users_ref.push({
-        'timestamp': datetime.datetime.now().isoformat(),
+    users_ref.push({
+        'timestamp': date_now.isoformat(),
         'is_cry': is_cry,
         'reason': cry_reason if is_cry else None
     })
@@ -99,7 +97,7 @@ def continuous_audio_monitor():
                     channels=CHANNELS,
                     rate=RATE,
                     input=True,
-                    input_device_index=DEVICE_INDEX,
+                    # input_device_index=DEVICE_INDEX,
                     frames_per_buffer=CHUNK)
     print("* Monitoring audio...")
 
@@ -123,7 +121,7 @@ def continuous_audio_monitor():
                 audio_data = audio_data.astype(np.float32) / 32768.0  # Normalize to [-1.0, 1.0]
 
                 # Save the audio file
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                timestamp = date_now.strftime("%Y%m%d_%H%M%S")
                 wave_output_filename = os.path.join(WAVE_OUTPUT_DIRECTORY, f"output_{timestamp}.wav")
                 wf = wave.open(wave_output_filename, 'wb')
                 wf.setnchannels(CHANNELS)
