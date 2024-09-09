@@ -36,3 +36,9 @@ arecord -D hw:3,0 -f cd -c 1 -vv ~/test.wav
 - hw:3 This is the card no(Hardware PCM card 3).
 - -c 1: This sets the number of channels to 1 (mono).
 - -f cd: This keeps the format as CD quality (16-bit, 44100 Hz).
+
+# Shutdown
+
+```bash
+sudo shutdown now
+```
