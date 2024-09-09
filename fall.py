@@ -1,4 +1,5 @@
 import cv2
+import libcamera
 from picamera2 import Picamera2
 from ultralytics import YOLO
 
@@ -29,7 +30,8 @@ else:
     # Initialize PiCamera2
     print("Waiting for video")
     picam2 = Picamera2()
-    config = picam2.create_video_configuration(main={"size": (VIDEO_HEIGHT, VIDEO_WIDTH), "format": "RGB888"})
+    config = picam2.create_video_configuration(main={"size": (VIDEO_HEIGHT, VIDEO_WIDTH), "format": "RGB888"},
+                                               transform=libcamera.Transform(hflip=True, vflip=True))
     picam2.configure(config)
     picam2.start()
 

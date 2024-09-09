@@ -1,6 +1,7 @@
 import io
 import os
 
+import libcamera
 from PIL import Image
 from flask import Flask, render_template, Response
 from picamera2 import Picamera2
@@ -8,7 +9,8 @@ from picamera2 import Picamera2
 app = Flask(__name__)
 
 camera = Picamera2()
-camera_config = camera.create_video_configuration(main={"size": (640, 480)})
+camera_config = camera.create_video_configuration(main={"size": (640, 480)},
+                                                  transform=libcamera.Transform(hflip=True, vflip=True))
 camera.configure(camera_config)
 camera.start()
 
