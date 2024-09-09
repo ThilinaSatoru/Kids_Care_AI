@@ -6,25 +6,27 @@ Kids Care AI IOT Device - RaspberryPi USB Mic voice detection and Picamera fall 
 
 ```cmd
 ssh admin@raspberrypi.local
-cd Documents/Kids_Care_AI
 ```
-password: `admin`
+
+`password: admin`
+
+## Test Picam
+
+```cmd
+python Documents/cam/stream.py
+```
+## Run Fall Detection
+ ```bash
+ python Documents/Kids_Care_AI/fall.py
+ ```
+## Run Cry Detection
+ ```bash
+ python Documents/Kids_Care_AI/cry.py
+ ```
 
 ---
-## Run Fall Detection
 
- ```bash
- python fall.py 2>/dev/null
- ```
-
---- 
-
-## Run Cry Detection
-
- ```bash
- python cry.py 2>/dev/null
- ```
-
+# Debugging
 ### Test Mic
 
 ```bash
